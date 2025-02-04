@@ -1,6 +1,7 @@
 from uuid import uuid4
 from tls_client import Session
 import random, time, json
+from geeked.sign import Signer
 
 
 class Geeked:
@@ -38,23 +39,22 @@ class Geeked:
         res = self.session.get(url)
         return self.format_response(res.text)
 
-
-
     def submit_captcha(self, init_response: dict) -> str:
         self.callback = Geeked.random()
+        data = init_response["data"]
         params = {
             "callback": self.callback,
             "captcha_id": self.captcha_id,
             "client_type": "web",
-            "lot_number": init_response["lot_number"],
+            "lot_number": data["lot_number"],
             "risk_type": self.risk_type,
-            "payload": init_response["payload"],
-            "process_token": init_response["process_token"],
+            "payload": data["payload"],
+            "process_token": data["process_token"],
             "payload_protocol": "1",
             "pt": "1",
-            "w": ""
+            "w": Signer.generate_w(data, self.captcha_id),
         }
 
     def solve(self):
         init_res = self.load_captcha()
-        print(init_res)
+        self.submit_captcha(init_res)
