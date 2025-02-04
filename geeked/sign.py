@@ -60,6 +60,7 @@ class LotParser:
                 current = current[part]
         return a
 
+
 class Signer:
     encryptor_pubkey = construct((
         int("00C1E3934D1614465B33053E7F48EE4EC87B14B95EF88947713D25EECBFF7E74C7977D02DC1D9451F79DD5D1C10C29ACB6A9B4D6FB7D0A0279B6719E1772565F09AF627715919221AEF91899CAE08C0D686D748B20A3603BE2318CA6BC2B59706592A9219D0BF05C9F65023A21D2330807252AE0066D59CEEFA5F2748EA80BAB81".lower(),
@@ -175,14 +176,14 @@ function encrypt_asymmetric_2(input, key) {
             **LotParser().get_dict(lot_number),
             "biht": "1426265548",
             "device_id": "",  # why is this empty!!
-            "em": {
-                "cp": 0,
-                "ek": "f1",
-                "nt": 0,
-                "ph": 0,
-                "sc": 0,
-                "si": 0,
-                "wd": 0
+            "em": {  # save to have this static (see em.js)
+                "cp": 0,  # checkCallPhantom
+                "ek": "f1",  # checkErrorKeys
+                "nt": 0,  # checkNightmare
+                "ph": 0,  # checkPhantom
+                "sc": 0,  # checkSeleniumMarker
+                "si": 0,  # checkScriptFn
+                "wd": 0  # checkWebDriver
             },
             "ep": "123",
             "gee_guard": {
