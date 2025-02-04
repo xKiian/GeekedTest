@@ -93,7 +93,7 @@ class Signer:
 
         return encrypted_hex
 
-    """
+    """ ill implement it when its needed
 function encrypt_asymmetric_2(input, key) {
 	void 0 === key && (key = '9a4ea935b2576f37516d9b29cd8d8cc9bffe548ba6853253ba20f4ba44fba8c9e97a398882769aa0dd1e3e1b5601429287303880ca17bd244ed73bf702a68fc7');
 	var moreargs = 2 < arguments['length'] && arguments[2] !== undefined ? arguments[2] : 1;
@@ -183,9 +183,8 @@ function encrypt_asymmetric_2(input, key) {
                 "ph": 0,  # checkPhantom
                 "sc": 0,  # checkSeleniumMarker
                 "si": 0,  # checkScriptFn
-                "wd": 0  # checkWebDriver
+                "wd": 0,  # checkWebDriver
             },
-            "ep": "123",
             "gee_guard": {
                 "roe": {  # "3" = no | "1" = yes
                     "auh": "3",  # HEADCHR_UA            | regex(/HeadlessChrome/) in UserAgent
@@ -198,11 +197,12 @@ function encrypt_asymmetric_2(input, key) {
                     "snh": "3",  # HEADCHR_PERMISSIONS   | checks browser version etc.
                 }
             },
-            "geetest": "captcha",
-            "lang": "zh",  # always zh
+            "ep": "123",  # static
+            "geetest": "captcha",  # static
+            "lang": "zh",  # static
+            "qCzt": "VLwx",  # static
             "lot_number": lot_number,
             "passtime": 753,
-            "qCzt": "VLwx",  # static
             "setLeft": 104,
             "userresponse": 105.38520266150626
         }), data["pt"])
