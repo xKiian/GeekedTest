@@ -1,9 +1,64 @@
-import random, hashlib, urllib.parse, binascii, json
+import random, hashlib, urllib.parse, binascii, json, re
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
 from Crypto.PublicKey.RSA import construct
 from Crypto.Cipher import PKCS1_v1_5
 
+
+class LotParser:
+    def __init__(self):
+        self.mapping = {"n[25:27]+n[4:6]": 'n[14:19]'}
+        self.lot = []
+        self.lot_res = []
+        for k, v in self.mapping.items():
+            self.lot = self._parse(k)
+            self.lot_res = self._parse(v)
+
+    @staticmethod
+    def _parse_slice(s):
+        return [int(x) for x in s.split(':')]
+
+    @staticmethod
+    def _extract(part):
+        return re.search(r'\[(.*?)\]', part).group(1)
+
+    def _parse(self, s):
+        parts = s.split('+.+')
+        parsed = []
+        for part in parts:
+            if '+' in part:
+                subs = part.split('+')
+                parsed_subs = [self._parse_slice(self._extract(sub)) for sub in subs]
+                parsed.append(parsed_subs)
+            else:
+                parsed.append([self._parse_slice(self._extract(part))])
+        return parsed
+
+    @staticmethod
+    def _build_str(parsed, num):
+        result = []
+        for p in parsed:
+            current = []
+            for s in p:
+                start = s[0]
+                end = s[1] + 1 if len(s) > 1 else start + 1
+                current.append(num[start:end])
+            result.append(''.join(current))
+        return '.'.join(result)
+
+    def get_dict(self, lot_number):
+        i = self._build_str(self.lot, lot_number)
+        r = self._build_str(self.lot_res, lot_number)
+        parts = i.split('.')
+        a = {}
+        current = a
+        for idx, part in enumerate(parts):
+            if idx == len(parts) - 1:
+                current[part] = r
+            else:
+                current[part] = current.get(part, {})
+                current = current[part]
+        return a
 
 class Signer:
     encryptor_pubkey = construct((
@@ -66,7 +121,7 @@ function encrypt_asymmetric_2(input, key) {
         if pt == "1":
             enc_key = Signer.encrypt_asymmetric_1(random_uid)
             enc_input = Signer.encrypt_symmetrical_1(raw_input, random_uid)
-        else: #there's either "1" or "2" but pycharm won't stop giving me a warning 🤷
+        else:  # there's either "1" or "2" but pycharm won't stop giving me a warning 🤷
             raise NotImplementedError("This type of encryption is not implemented yet. Create an issue")
 
         return binascii.hexlify(enc_input).decode() + enc_key
@@ -117,7 +172,7 @@ function encrypt_asymmetric_2(input, key) {
         return Signer.encrypt_w(json.dumps({
             **Signer.generate_pow(lot_number, captcha_id, pow_detail['hashfunc'], pow_detail['version'],
                                   pow_detail['bits'], pow_detail['datetime'], ""),
-            "697604": "00b921",
+            **LotParser().get_dict(lot_number),
             "biht": "1426265548",
             "device_id": "",  # why is this empty!!
             "em": {
@@ -131,22 +186,22 @@ function encrypt_asymmetric_2(input, key) {
             },
             "ep": "123",
             "gee_guard": {
-                "roe": {
-                    "auh": "3",
-                    "aup": "3",
-                    "cdc": "3",
-                    "egp": "3",
-                    "res": "3",
-                    "rew": "3",
-                    "sep": "3",
-                    "snh": "3",
+                "roe": {  # "3" = no | "1" = yes
+                    "auh": "3",  # HEADCHR_UA            | regex(/HeadlessChrome/) in UserAgent
+                    "aup": "3",  # PHANTOM_UA            | regex(/PhantomJS/) in UserAgent
+                    "cdc": "3",  # CDC                   | cdc check
+                    "egp": "3",  # PHANTOM_LANGUAGE      | language header !== undefined
+                    "res": "3",  # SELENIUM_DRIVER       | 35 selenium checks 💀
+                    "rew": "3",  # WEBDRIVER             | webDriver check
+                    "sep": "3",  # PHANTOM_PROPERTIES    | phantomJS check
+                    "snh": "3",  # HEADCHR_PERMISSIONS   | checks browser version etc.
                 }
             },
             "geetest": "captcha",
-            "lang": "zh",
+            "lang": "zh",  # always zh
             "lot_number": lot_number,
             "passtime": 753,
-            "qCzt": "VLwx",
+            "qCzt": "VLwx",  # static
             "setLeft": 104,
             "userresponse": 105.38520266150626
         }), data["pt"])
