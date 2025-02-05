@@ -95,7 +95,7 @@ class Signer:
 
         return encrypted_hex
 
-    """ ill implement it when its needed
+    """ ill implement it when needed
 function encrypt_asymmetric_2(input, key) {
 	void 0 === key && (key = '9a4ea935b2576f37516d9b29cd8d8cc9bffe548ba6853253ba20f4ba44fba8c9e97a398882769aa0dd1e3e1b5601429287303880ca17bd244ed73bf702a68fc7');
 	var moreargs = 2 < arguments['length'] && arguments[2] !== undefined ? arguments[2] : 1;
@@ -124,7 +124,7 @@ function encrypt_asymmetric_2(input, key) {
         if pt == "1":
             enc_key = Signer.encrypt_asymmetric_1(random_uid)
             enc_input = Signer.encrypt_symmetrical_1(raw_input, random_uid)
-        else:  # there's either "1" or "2" but pycharm won't stop giving me a warning 🤷
+        else:  # elif pt == "2" | there's either "1" or "2"
             raise NotImplementedError("This type of encryption is not implemented yet. Create an issue")
 
         return binascii.hexlify(enc_input).decode() + enc_key
@@ -168,11 +168,11 @@ function encrypt_asymmetric_2(input, key) {
                         return {'pow_msg': pow_string + h, 'pow_sign': hashed_value}
 
     @staticmethod
-    def generate_w(data: dict, captcha_id: str):
+    def generate_w(data: dict, captcha_id: str, risk_type: str):
         lot_number = data['lot_number']
         pow_detail = data['pow_detail']
 
-        return Signer.encrypt_w(json.dumps({
+        base =  Signer.encrypt_w(json.dumps({
             **Signer.generate_pow(lot_number, captcha_id, pow_detail['hashfunc'], pow_detail['version'],
                                   pow_detail['bits'], pow_detail['datetime'], ""),
             **lotParser.get_dict(lot_number),
@@ -204,7 +204,16 @@ function encrypt_asymmetric_2(input, key) {
             "lang": "zh",  # static
             "xUGO": "3ILF",  # static
             "lot_number": lot_number,
-            # "passtime": 753,
-            # "setLeft": 104,
-            # "userresponse": 105.38520266150626
         }), data["pt"])
+
+        if risk_type == "ai" or risk_type == "invisible":
+            pass
+        elif risk_type == "slide":
+            left = 493.342
+            base |= {
+                "passtime": random.randint(600, 1200), # time in ms it took to solve
+                "setLeft": left,
+                "userresponse": left / (.8876 * random.uniform(.9, 1.5)) + 2 # setLeft // .8876 * _ᕶᕶᖄᖁ / _ᖃᕾᕴᖗ['wrap_w'];
+            }
+
+        return Signer.encrypt_w(json.dumps(base), data["pt"])

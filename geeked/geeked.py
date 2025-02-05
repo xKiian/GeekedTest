@@ -1,7 +1,8 @@
 from uuid import uuid4
-from tls_client import Session
+# from tls_client import Session
 import random, time, json
 from geeked.sign import Signer
+from requests import Session
 
 
 class Geeked:
@@ -13,18 +14,16 @@ class Geeked:
         self.risk_type = risk_type
         self.base_url = "https://gcaptcha4.geetest.com"
         self.callback = Geeked.random()
-        self.session = Session(client_identifier="chrome_120")
+        self.session = Session()  # Session(client_identifier="chrome_120")
         self.session.headers = {
             "connection": "keep-alive",
             "sec-ch-ua-platform": "\"Windows\"",
             "user-agent": "MMozilla/5.0 (Windows NT 10.0; Win64; x64; rv:134.0) Gecko/20100101 Firefox/134.0",
-            "sec-ch-ua": "\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Google Chrome\";v=\"132\"",
             "sec-ch-ua-mobile": "?0",
             "accept": "*/*",
             "sec-fetch-site": "same-origin",
             "sec-fetch-mode": "no-cors",
             "sec-fetch-dest": "script",
-            #"referer": "https://gt4.geetest.com/demov4/slide-popup-en.html",
             "accept-encoding": "gzip, deflate, br, zstd",
             "accept-language": "en-US,en;q=0.9"
         }
@@ -34,12 +33,19 @@ class Geeked:
         return f"geetest_{int(random.random() * 10000) + int(time.time() * 1000)}"
 
     def format_response(self, response: str) -> dict:
-        #print(json.loads(response.split(f"{self.callback}(")[1][:-1]))
+        # print(json.loads(response.split(f"{self.callback}(")[1][:-1]))
         return json.loads(response.split(f"{self.callback}(")[1][:-1])["data"]
 
     def load_captcha(self):
-        url = f"{self.base_url}/load?captcha_id={self.captcha_id}&challenge={self.challenge}&client_type=web&risk_type={self.risk_type}&lang=eng&callback={self.callback}"
-        res = self.session.get(url)
+        params = {
+            "captcha_id": self.captcha_id,
+            "challenge": self.challenge,
+            "client_type": "web",
+            "risk_type": self.risk_type,
+            "lang": "eng",
+            "callback": self.callback,
+        }
+        res = self.session.get(f"{self.base_url}/load", params=params)
         return self.format_response(res.text)
 
     def submit_captcha(self, data: dict) -> dict:
