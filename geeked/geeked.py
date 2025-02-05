@@ -34,7 +34,7 @@ class Geeked:
         return f"geetest_{int(random.random() * 10000) + int(time.time() * 1000)}"
 
     def format_response(self, response: str) -> dict:
-        print(json.loads(response.split(f"{self.callback}(")[1][:-1]))
+        #print(json.loads(response.split(f"{self.callback}(")[1][:-1]))
         return json.loads(response.split(f"{self.callback}(")[1][:-1])["data"]
 
     def load_captcha(self):
@@ -42,7 +42,7 @@ class Geeked:
         res = self.session.get(url)
         return self.format_response(res.text)
 
-    def submit_captcha(self, data: dict) -> str:
+    def submit_captcha(self, data: dict) -> dict:
         self.callback = Geeked.random()
 
         params = {
@@ -59,22 +59,14 @@ class Geeked:
         }
         res = self.session.get(f"{self.base_url}/verify", params=params).text
         res = self.format_response(res)
+
+        if res.get("seccode") is None:
+            raise Exception(f"Failed to submit captcha: {res}")
+
         return res["seccode"]
 
-    def verify(self, data: dict):
-        params = {
-            "captcha_id": self.captcha_id,
-            "lot_number": self.lot_number,
-            "pass_token": data["pass_token"],
-            "gen_time": data["gen_time"],
-            "captcha_output": data["captcha_output"],
-        }
-        res = self.session.get("https://gt4.geetest.com/demov4/demo/login", params=params).json()
-        if res["result"] == "success":
-            print(f"[+] Solved! lotNumber: {self.lot_number} | passToken: {data['pass_token']}")
-
-    def solve(self):
+    def solve(self) -> dict:
         data = self.load_captcha()
         self.lot_number = data["lot_number"]
         seccode = self.submit_captcha(data)
-        self.verify(seccode)
+        return seccode

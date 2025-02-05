@@ -7,7 +7,7 @@ from Crypto.Cipher import PKCS1_v1_5
 
 class LotParser:
     def __init__(self):
-        self.mapping = {"n[25:27]+n[4:6]": 'n[14:19]'}
+        self.mapping = {"(n[27]+n[24]+n[28]+n[0])+.+(n[0:3]+n[8:11])": 'n[14:17]'}
         self.lot = []
         self.lot_res = []
         for k, v in self.mapping.items():
@@ -60,6 +60,8 @@ class LotParser:
                 current = current[part]
         return a
 
+
+lotParser = LotParser() # doesn't need to calculate the lot and lot_res every time, so were gonna cache it
 
 class Signer:
     encryptor_pubkey = construct((
@@ -173,36 +175,36 @@ function encrypt_asymmetric_2(input, key) {
         return Signer.encrypt_w(json.dumps({
             **Signer.generate_pow(lot_number, captcha_id, pow_detail['hashfunc'], pow_detail['version'],
                                   pow_detail['bits'], pow_detail['datetime'], ""),
-            **LotParser().get_dict(lot_number),
-            "biht": "1426265548",
+            **lotParser.get_dict(lot_number),
+            "biht": "1426265548", # static
             "device_id": "",  # why is this empty!!
             "em": {  # save to have this static (see em.js)
                 "cp": 0,  # checkCallPhantom
-                "ek": "f1",  # checkErrorKeys
+                "ek": "f1",  # checkErrorKeys "11" as value is also fine
                 "nt": 0,  # checkNightmare
                 "ph": 0,  # checkPhantom
                 "sc": 0,  # checkSeleniumMarker
                 "si": 0,  # checkScriptFn
-                "wd": 0,  # checkWebDriver
+                "wd": 1,  # checkWebDriver
             },
             "gee_guard": {
-                "roe": {  # "3" = no | "1" = yes
-                    "auh": "3",  # HEADCHR_UA            | regex(/HeadlessChrome/) in UserAgent
-                    "aup": "3",  # PHANTOM_UA            | regex(/PhantomJS/) in UserAgent
-                    "cdc": "3",  # CDC                   | cdc check
-                    "egp": "3",  # PHANTOM_LANGUAGE      | language header !== undefined
-                    "res": "3",  # SELENIUM_DRIVER       | 35 selenium checks 💀
-                    "rew": "3",  # WEBDRIVER             | webDriver check
-                    "sep": "3",  # PHANTOM_PROPERTIES    | phantomJS check
-                    "snh": "3",  # HEADCHR_PERMISSIONS   | checks browser version etc.
-                }
+               "roe": {  # "3" = no | "1" = yes
+                   "auh": "3",  # HEADCHR_UA            | regex(/HeadlessChrome/) in UserAgent
+                   "aup": "3",  # PHANTOM_UA            | regex(/PhantomJS/) in UserAgent
+                   "cdc": "3",  # CDC                   | cdc check
+                   "egp": "3",  # PHANTOM_LANGUAGE      | language header !== undefined
+                   "res": "3",  # SELENIUM_DRIVER       | 35 selenium checks 💀
+                   "rew": "3",  # WEBDRIVER             | webDriver check
+                   "sep": "3",  # PHANTOM_PROPERTIES    | phantomJS check
+                   "snh": "3",  # HEADCHR_PERMISSIONS   | checks browser version etc.
+               }
             },
             "ep": "123",  # static
             "geetest": "captcha",  # static
             "lang": "zh",  # static
-            "qCzt": "VLwx",  # static
+            "xUGO": "3ILF",  # static
             "lot_number": lot_number,
-            "passtime": 753,
-            "setLeft": 104,
-            "userresponse": 105.38520266150626
+            # "passtime": 753,
+            # "setLeft": 104,
+            # "userresponse": 105.38520266150626
         }), data["pt"])
