@@ -1,9 +1,11 @@
-import random, hashlib, urllib.parse, binascii, json, re
+import random, hashlib, urllib.parse, binascii, json, re, requests
+import time
+
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
 from Crypto.PublicKey.RSA import construct
 from Crypto.Cipher import PKCS1_v1_5
-
+from geeked.slide import GeeTestIdentifier
 
 class LotParser:
     def __init__(self):
@@ -61,7 +63,8 @@ class LotParser:
         return a
 
 
-lotParser = LotParser() # doesn't need to calculate the lot and lot_res every time, so were gonna cache it
+lotParser = LotParser()  # doesn't need to calculate the lot and lot_res every time, so were gonna cache it
+
 
 class Signer:
     encryptor_pubkey = construct((
@@ -124,7 +127,7 @@ function encrypt_asymmetric_2(input, key) {
         if pt == "1":
             enc_key = Signer.encrypt_asymmetric_1(random_uid)
             enc_input = Signer.encrypt_symmetrical_1(raw_input, random_uid)
-        else:  # elif pt == "2" | there's either "1" or "2"
+        else:  # elif pt == "2" # there's either "1" or "2"
             raise NotImplementedError("This type of encryption is not implemented yet. Create an issue")
 
         return binascii.hexlify(enc_input).decode() + enc_key
@@ -168,15 +171,15 @@ function encrypt_asymmetric_2(input, key) {
                         return {'pow_msg': pow_string + h, 'pow_sign': hashed_value}
 
     @staticmethod
-    def generate_w(data: dict, captcha_id: str, risk_type: str):
+    def generate_w(data: dict, captcha_id: str, risk_type: str, **kwargs):
         lot_number = data['lot_number']
         pow_detail = data['pow_detail']
 
-        base =  Signer.encrypt_w(json.dumps({
+        base = {
             **Signer.generate_pow(lot_number, captcha_id, pow_detail['hashfunc'], pow_detail['version'],
                                   pow_detail['bits'], pow_detail['datetime'], ""),
             **lotParser.get_dict(lot_number),
-            "biht": "1426265548", # static
+            "biht": "1426265548",  # static
             "device_id": "",  # why is this empty!!
             "em": {  # save to have this static (see em.js)
                 "cp": 0,  # checkCallPhantom
@@ -188,32 +191,34 @@ function encrypt_asymmetric_2(input, key) {
                 "wd": 1,  # checkWebDriver
             },
             "gee_guard": {
-               "roe": {  # "3" = no | "1" = yes
-                   "auh": "3",  # HEADCHR_UA            | regex(/HeadlessChrome/) in UserAgent
-                   "aup": "3",  # PHANTOM_UA            | regex(/PhantomJS/) in UserAgent
-                   "cdc": "3",  # CDC                   | cdc check
-                   "egp": "3",  # PHANTOM_LANGUAGE      | language header !== undefined
-                   "res": "3",  # SELENIUM_DRIVER       | 35 selenium checks 💀
-                   "rew": "3",  # WEBDRIVER             | webDriver check
-                   "sep": "3",  # PHANTOM_PROPERTIES    | phantomJS check
-                   "snh": "3",  # HEADCHR_PERMISSIONS   | checks browser version etc.
-               }
+                "roe": {  # "3" = no | "1" = yes
+                    "auh": "3",  # HEADCHR_UA            | regex(/HeadlessChrome/) in UserAgent
+                    "aup": "3",  # PHANTOM_UA            | regex(/PhantomJS/) in UserAgent
+                    "cdc": "3",  # CDC                   | cdc check
+                    "egp": "3",  # PHANTOM_LANGUAGE      | language header !== undefined
+                    "res": "3",  # SELENIUM_DRIVER       | 35 selenium checks 💀
+                    "rew": "3",  # WEBDRIVER             | webDriver check
+                    "sep": "3",  # PHANTOM_PROPERTIES    | phantomJS check
+                    "snh": "3",  # HEADCHR_PERMISSIONS   | checks browser version etc.
+                }
             },
             "ep": "123",  # static
             "geetest": "captcha",  # static
             "lang": "zh",  # static
             "xUGO": "3ILF",  # static
             "lot_number": lot_number,
-        }), data["pt"])
+        }
 
         if risk_type == "ai" or risk_type == "invisible":
             pass
         elif risk_type == "slide":
-            left = 493.342
+            left = GeeTestIdentifier(
+                requests.get(kwargs["bg"]).content,
+                requests.get(kwargs["piece"]).content
+            ).find_puzzle_piece_position() + random.uniform(0, .5)
             base |= {
-                "passtime": random.randint(600, 1200), # time in ms it took to solve
+                "passtime": random.randint(600, 1200),  # time in ms it took to solve
                 "setLeft": left,
-                "userresponse": left / (.8876 * random.uniform(.9, 1.5)) + 2 # setLeft // .8876 * _ᕶᕶᖄᖁ / _ᖃᕾᕴᖗ['wrap_w'];
+                "userresponse": left / 1.0059466666666665 + 2 # 1.0059466666666665 = .8876 * 340 / 300
             }
-
         return Signer.encrypt_w(json.dumps(base), data["pt"])

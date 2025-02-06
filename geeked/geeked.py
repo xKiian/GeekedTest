@@ -61,7 +61,10 @@ class Geeked:
             "process_token": data["process_token"],
             "payload_protocol": "1",
             "pt": "1",
-            "w": Signer.generate_w(data, self.captcha_id),
+            "w": Signer.generate_w(data, self.captcha_id, self.risk_type,
+                                   piece=f"https://static.geetest.com/{data['slice']}",
+                                   bg=f"https://static.geetest.com/{data['bg']}",
+                                   ypos=data["ypos"]),
         }
         res = self.session.get(f"{self.base_url}/verify", params=params).text
         res = self.format_response(res)
