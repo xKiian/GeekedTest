@@ -10,13 +10,16 @@ please star the repo to show support❤️
 
 
 ## Captcha ID
-1. Open dev tools (Ctr + shift + I)
+Obtaining the Captcha ID & risk type is simple.
+1. Open dev tools `(Ctr + shift + I)`
 2. Click on the Network tab
 3. Solve the captcha
 4. Filter for `verify`
-5. Click on the request that is showing up and then on the little arrow
-6. Copy the captcha_id param
+5. Click on the request that is showing up and then on the little arrow left to `GET`
+6. Copy the captcha_id & risk_type param
+
 ![Captcha Id](assets/captcha_id.png)
+
 ## Installation
 ```
 copy the geeked folder, then import Geeked from geeked
