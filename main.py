@@ -1,17 +1,11 @@
-from geeked.geeked import Geeked
-import time
+from geeked import Geeked
 
 challenges = {
     "ai": "55c86e822ef5984cc0b03a3bbfd1a7c7", # Invisible
     "slide": "54088bb07d2df3c46b79f80300b0abbe",
 }
 
-
-while True:
-    geeked = Geeked("54088bb07d2df3c46b79f80300b0abbe", "slide")
-
-    start = time.time()
-    sec_code = geeked.solve()
-
-    print(f"[+] Solved Geetest \"slide\" in {round(time.time() - start, 3)} seconds! | {sec_code['pass_token']}")
-    time.sleep(2)
+geeked = Geeked("54088bb07d2df3c46b79f80300b0abbe", "slide")
+sec_code = geeked.solve()
+print(sec_code)
+# do something with sec_code
