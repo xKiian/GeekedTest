@@ -5,6 +5,8 @@
     <img src="assets/slide.png">
 </div>
 
+Version: v1.8.7-1115d9
+
 ---
 
 # ⭐️ Show Your Support
@@ -57,6 +59,16 @@ print(sec_code)
 # }
 
 ```
+
+---
+
+## Note
+
+There are 2 constants in `sign.py`
+- self.mapping
+- abo
+
+If the solver doesn't work, run `deobfuscate.py` to get the updated constants.
 
 ---
 

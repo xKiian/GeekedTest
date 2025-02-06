@@ -174,8 +174,8 @@ function encrypt_asymmetric_2(input, key) {
     def generate_w(data: dict, captcha_id: str, risk_type: str, **kwargs):
         lot_number = data['lot_number']
         pow_detail = data['pow_detail']
-
-        base = {
+        abo = {"xUGO": "3ILF"}
+        base = abo | {
             **Signer.generate_pow(lot_number, captcha_id, pow_detail['hashfunc'], pow_detail['version'],
                                   pow_detail['bits'], pow_detail['datetime'], ""),
             **lotParser.get_dict(lot_number),
@@ -205,7 +205,6 @@ function encrypt_asymmetric_2(input, key) {
             "ep": "123",  # static
             "geetest": "captcha",  # static
             "lang": "zh",  # static
-            "xUGO": "3ILF",  # static
             "lot_number": lot_number,
         }
 
