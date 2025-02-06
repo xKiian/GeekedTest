@@ -5,53 +5,67 @@
     <img src="assets/slide.png">
 </div>
 
-# ⭐️ star the repo
-please star the repo to show support❤️
+---
+
+# ⭐️ Show Your Support
+Please star the repository if you find it useful! Your support helps improve the project. ❤️
+
+---
 
 ## Disclaimer
-This repository only supports risk_type `slide` & `ai`. If this gets enough attention i will add more
+This repository currently supports only **risk_type** `slide` and `ai`. If the project gains enough attention, I will consider adding more risk types.
 
-## Captcha ID
-Obtaining the Captcha ID & risk type is simple.
-1. Open dev tools `(ctr + shift + I)`
-2. Click on the Network tab
-3. Solve the captcha
-4. Filter for `verify`
-5. Click on the request that is showing up and then on the little arrow left to `GET`
-6. Copy the captcha_id & risk_type param
+---
 
-![Captcha Id](assets/captcha_id.png)
+## How to Obtain the Captcha ID & Risk Type
+To use this solver, you'll need to obtain the **captcha_id** and **risk_type**. Here's how you can do it:
 
+1. **Open DevTools** in your browser (Press `Ctrl + Shift + I`).
+2. Navigate to the **Network** tab.
+3. **Solve the captcha** on the page.
+4. Filter the network requests by searching for `verify`.
+5. Find the request with the **GET** method and click on the small arrow to the left of it.
+6. Look for the `captcha_id` and `risk_type` parameters in the request details and copy them.
 
+![Captcha ID](assets/captcha_id.png)
+
+---
 
 ## Example Usage
 
 ```python
 from geeked import Geeked
 
+# Replace with your own captcha_id
 captcha_id = "54088bb07d2df3c46b79f80300b0abbe"
 
+# Instantiate the solver with captcha_id and risk_type
 geeked = Geeked(captcha_id, risk_type="slide")
+
+# Solve the captcha
 sec_code = geeked.solve()
 
+# Output the solution
 print(sec_code)
-#{'captcha_id': '...', 'lot_number': '...', 'pass_token': '...', 'gen_time': '1738861564', 'captcha_output': '...'}
+# Output will be in the following format:
+# {
+#    'captcha_id': '...',
+#    'lot_number': '...',
+#    'pass_token': '...',
+#    'gen_time': '...',
+#    'captcha_output': '...'
+# }
+
 ```
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request. Here are some ways you can contribute:
-
-- 🐛 Report bugs
-- ✨ Request features
-- 📝 Improve documentation
-- 🔧 Submit bug fixes
-- 🎨 Add examples
+---
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+---
 
 ## Disclaimer #2
 
-This package is unofficial and not affiliated with WUHAN JIYI NETWORK TECHNOLOGY CO., LTD. Use it responsibly and in accordance with WUHAN JIYI NETWORK TECHNOLOGY CO., LTD.'s terms of service.
+This package is **unofficial** and not affiliated with **WUHAN JIYI NETWORK TECHNOLOGY CO., LTD**. Use it responsibly and in accordance with their terms of service.
