@@ -7,20 +7,19 @@ Big thanks to glizzykingdreko for making amazing solver
 i modified it a bit
 """
 import numpy as np
-from PIL import Image
-import io, requests, cv2
+import requests, cv2
 
 
-class GeeTestIdentifier:
+class SlideSolver:
     def __init__(self, background, puzzle_piece):
         self.background = self._read_image(background)
         self.puzzle_piece = self._read_image(puzzle_piece)
 
     @staticmethod
     def test():
-        identifier = GeeTestIdentifier(
-            background=GeeTestIdentifier.load_image("https://static.geetest.com/captcha_v4/e70fbf1d77/slide/0af8d91d43/2022-04-21T09/bg/552119bd2af448b9a3af1ce95b887b90.png"),
-            puzzle_piece=GeeTestIdentifier.load_image("https://static.geetest.com/captcha_v4/e70fbf1d77/slide/0af8d91d43/2022-04-21T09/slice/552119bd2af448b9a3af1ce95b887b90.png"),
+        identifier = SlideSolver(
+            background=SlideSolver.load_image("https://static.geetest.com/captcha_v4/e70fbf1d77/slide/0af8d91d43/2022-04-21T09/bg/552119bd2af448b9a3af1ce95b887b90.png"),
+            puzzle_piece=SlideSolver.load_image("https://static.geetest.com/captcha_v4/e70fbf1d77/slide/0af8d91d43/2022-04-21T09/slice/552119bd2af448b9a3af1ce95b887b90.png"),
         )
         result = identifier.find_puzzle_piece_position()
         print(f"Result: {result}")
@@ -59,18 +58,8 @@ class GeeTestIdentifier:
         h, w = edge_puzzle_piece.shape[:2]
 
         center_x = top_left[0] + w // 2
-        return center_x  - 41 # -41 because we don't want the center but the start of the piece
-
-    @staticmethod
-    def get_puzzle_piece_box(img_bytes: bytes):
-        """
-        Identify the bounding box of the non-transparent part of an image.
-        """
-        image = Image.open(io.BytesIO(img_bytes))
-        bbox = image.getbbox()
-        cropped_image = image.crop(bbox)
-        return cropped_image, bbox[0], bbox[1]
+        return center_x  - 41 # -41 because we need the start of the piece, not the center
 
 
 if __name__ == '__main__':
-    GeeTestIdentifier.test()
+    SlideSolver.test()

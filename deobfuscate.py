@@ -22,7 +22,7 @@ print("[~] Path/Version:", path)
 
 script = requests.get(f"https://static.geetest.com{path}/js/gcaptcha4.js").text
 
-open("raw.js", "w", encoding="utf8").write(script)
+# open("raw.js", "w", encoding="utf8").write(script)
 
 
 def decrypt_table(table_encrypted, _key):
@@ -58,3 +58,6 @@ print("[+] abo:", abo)
 
 mappings = re.findall(r"\['_abo']=(.+?)}\(\)", script)[0]
 print("[+] mappings", mappings)
+
+device_id = re.findall(r"\['options']\['deviceId']='(.*?)'", script)[0]
+print(f"[+] device_id: \"{device_id}\" (probably empty)")

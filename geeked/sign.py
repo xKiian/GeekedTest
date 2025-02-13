@@ -1,11 +1,16 @@
-import random, hashlib, urllib.parse, binascii, json, re, requests
-import time
+import random
+import hashlib
+import urllib.parse
+import binascii
+import json
+import re
+import requests
 
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
 from Crypto.PublicKey.RSA import construct
 from Crypto.Cipher import PKCS1_v1_5
-from geeked.slide import GeeTestIdentifier
+from geeked.slide import SlideSolver
 
 
 class LotParser:
@@ -209,12 +214,12 @@ function encrypt_asymmetric_2(input, key) {
             "lot_number": lot_number,
         }
 
-        if risk_type == "ai" or risk_type == "invisible":
+        if risk_type in ("ai", "invisible"):
             pass
         elif risk_type == "slide":
-            left = GeeTestIdentifier(
-                requests.get(kwargs["bg"]).content,
-                requests.get(kwargs["piece"]).content
+            left = SlideSolver(
+                requests.get(kwargs["bg"], timeout=10).content,
+                requests.get(kwargs["piece"], timeout=10).content
             ).find_puzzle_piece_position() + random.uniform(0, .5)
             base |= {
                 "passtime": random.randint(600, 1200),  # time in ms it took to solve
@@ -222,5 +227,6 @@ function encrypt_asymmetric_2(input, key) {
                 "userresponse": left / 1.0059466666666665 + 2  # 1.0059466666666665 = .8876 * 340 / 300
             }
         else:
-            raise NotImplementedError("This type ({}) of captcha is not implemented yet.".format(risk_type))
+            raise NotImplementedError(f"This type ({risk_type}) of captcha is not implemented yet.")
+
         return Signer.encrypt_w(json.dumps(base), data["pt"])
