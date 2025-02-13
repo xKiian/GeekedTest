@@ -7,9 +7,10 @@ from Crypto.PublicKey.RSA import construct
 from Crypto.Cipher import PKCS1_v1_5
 from geeked.slide import GeeTestIdentifier
 
+
 class LotParser:
     def __init__(self):
-        self.mapping = {"(n[27]+n[24]+n[28]+n[0])+.+(n[0:3]+n[8:11])": 'n[14:17]'}
+        self.mapping = {"(n[1]+n[12]+n[24]+n[13])+.+(n[5:12])+.+(n[24]+n[11]+n[9]+n[0])": 'n[11:18]'}
         self.lot = []
         self.lot_res = []
         for k, v in self.mapping.items():
@@ -174,7 +175,7 @@ function encrypt_asymmetric_2(input, key) {
     def generate_w(data: dict, captcha_id: str, risk_type: str, **kwargs):
         lot_number = data['lot_number']
         pow_detail = data['pow_detail']
-        abo = {"xUGO": "3ILF"}
+        abo = {"PJG8": "VHpB"}
         base = abo | {
             **Signer.generate_pow(lot_number, captcha_id, pow_detail['hashfunc'], pow_detail['version'],
                                   pow_detail['bits'], pow_detail['datetime'], ""),
@@ -218,6 +219,8 @@ function encrypt_asymmetric_2(input, key) {
             base |= {
                 "passtime": random.randint(600, 1200),  # time in ms it took to solve
                 "setLeft": left,
-                "userresponse": left / 1.0059466666666665 + 2 # 1.0059466666666665 = .8876 * 340 / 300
+                "userresponse": left / 1.0059466666666665 + 2  # 1.0059466666666665 = .8876 * 340 / 300
             }
+        else:
+            raise NotImplementedError("This type ({}) of captcha is not implemented yet.".format(risk_type))
         return Signer.encrypt_w(json.dumps(base), data["pt"])

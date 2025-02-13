@@ -1,7 +1,10 @@
 .idea
 *.pyc
+*.har
+
 table
+
 rev.js
 rev2.js
 /reverse/gcaptcha4.js
-*.har
+raw.js

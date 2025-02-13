@@ -1,6 +1,7 @@
 import requests, json, uuid, re
 import urllib.parse
 
+
 def getPath() -> str:
     params = {
         "callback": "geetest_1738850809870",
@@ -15,15 +16,16 @@ def getPath() -> str:
 
     return formatted["data"]["static_path"]
 
+
 path = getPath()
-print("[~] Path/Version:",path)
+print("[~] Path/Version:", path)
 
 script = requests.get(f"https://static.geetest.com{path}/js/gcaptcha4.js").text
 
-#open("raw.js", "w", encoding="utf8").write(script)
+open("raw.js", "w", encoding="utf8").write(script)
+
 
 def decrypt_table(table_encrypted, _key):
-
     key_length = len(_key)
 
     decrypted_chars = [chr(ord(table_encrypted[i]) ^ ord(_key[i % key_length])) for i in range(len(table_encrypted))]
@@ -31,27 +33,28 @@ def decrypt_table(table_encrypted, _key):
 
     return decrypted.split("^")
 
-table_enc = urllib.parse.unquote(script.split("decodeURI(\"")[1].split("\"")[0])
-key = re.findall(r"}}}\(\"([a-zA-Z]+?)\"\)}",script)[0]
 
-print("[~] Key:",key)
+table_enc = urllib.parse.unquote(script.split("decodeURI(\"")[1].split("\"")[0])
+key = re.findall(r"}}}\(\"(.+?)\"\)}", script)[0]
+
+print("[~] Key:", key)
 
 table = decrypt_table(table_enc, key)
 
 obfuscated_names = re.findall(r"(_.{4})\((\d+?)\)", script)
 
-print(f"[#] Replacing {len(obfuscated_names)} obfuscated names...")
+print(f"[#] Replacing {len(obfuscated_names)} obfuscated names...\n")
 
 for (name, index) in obfuscated_names:
     script = script.replace(f"{name}({index})", repr(table[int(index)]))
 
-#open("deobfuscated.js", "w", encoding="utf8").write(script)
+# open("deobfuscated.js", "w", encoding="utf8").write(script)
 
 
-#constants that might change on a version update
+# constants that might change on a version update
 
-lib = re.findall(r"\['_lib'\]=(.+?),", script)[0]
-print("[+] mappings:",lib)
+abo = re.findall(r"\['_lib']=(.+?),", script)[0].replace("'", '"')
+print("[+] abo:", abo)
 
-abo = re.findall(r"\['_abo'\]=(.+?)}\(\)", script)[0]
-print("[+] abo", abo)
+mappings = re.findall(r"\['_abo']=(.+?)}\(\)", script)[0]
+print("[+] mappings", mappings)
