@@ -11,6 +11,7 @@ from Crypto.Util.Padding import pad
 from Crypto.PublicKey.RSA import construct
 from Crypto.Cipher import PKCS1_v1_5
 from geeked.slide import SlideSolver
+from geeked.gobang import GobangSolver
 
 
 class LotParser:
@@ -177,7 +178,7 @@ function encrypt_asymmetric_2(input, key) {
                         return {'pow_msg': pow_string + h, 'pow_sign': hashed_value}
 
     @staticmethod
-    def generate_w(data: dict, captcha_id: str, risk_type: str, **kwargs):
+    def generate_w(data: dict, captcha_id: str, risk_type: str):
         lot_number = data['lot_number']
         pow_detail = data['pow_detail']
         abo = {"PJG8": "VHpB"}
@@ -218,13 +219,17 @@ function encrypt_asymmetric_2(input, key) {
             pass
         elif risk_type == "slide":
             left = SlideSolver(
-                requests.get(kwargs["bg"], timeout=10).content,
-                requests.get(kwargs["piece"], timeout=10).content
+                requests.get(f"https://static.geetest.com/{data['slice']}", timeout=10).content,
+                requests.get(f"https://static.geetest.com/{data['bg']}", timeout=10).content
             ).find_puzzle_piece_position() + random.uniform(0, .5)
             base |= {
                 "passtime": random.randint(600, 1200),  # time in ms it took to solve
                 "setLeft": left,
                 "userresponse": left / 1.0059466666666665 + 2  # 1.0059466666666665 = .8876 * 340 / 300
+            }
+        elif risk_type in ("winlinze", "gobang"):
+            base |= {
+                "userresponse": GobangSolver(data["ques"]).find_four_in_line()
             }
         else:
             raise NotImplementedError(f"This type ({risk_type}) of captcha is not implemented yet.")

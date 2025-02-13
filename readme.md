@@ -1,8 +1,10 @@
 # Geetest v4 solver
+
 <div>
     <img src="https://wakatime.com/badge/user/839267df-3912-44c6-97f4-9e3f0425b716/project/f6428644-935c-4ab9-82ab-fb782b33935a.svg" alt="wakatime">
     <br>
     <img src="assets/slide.png">
+    <img src="assets/gobang.png">
 </div>
 
 Version: v1.8.7-1115d9
@@ -10,16 +12,20 @@ Version: v1.8.7-1115d9
 ---
 
 # ⭐️ Show Your Support
+
 Please star the repository if you find it useful! Your support helps improve the project. ❤️
 
 ---
 
 ## Disclaimer
-This repository currently supports only **risk_type** `slide` and `ai`. If the project gains enough attention, I will consider adding more risk types.
+
+This repository currently supports only **risk_type** `slide`, `gobang` and `ai`. If the project gains enough attention, I will
+consider adding more risk types.
 
 ---
 
 ## How to Obtain the Captcha ID & Risk Type
+
 To use this solver, you'll need to obtain the **captcha_id** and **risk_type**. Here's how you can do it:
 
 1. **Open DevTools** in your browser (Press `Ctrl + Shift + I`).
@@ -65,6 +71,7 @@ print(sec_code)
 ## Note
 
 There are 2 constants in `sign.py`
+
 - self.mapping
 - abo
 
@@ -80,4 +87,5 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ## Disclaimer #2
 
-This package is **unofficial** and not affiliated with **WUHAN JIYI NETWORK TECHNOLOGY CO., LTD**. Use it responsibly and in accordance with their terms of service.
+This package is **unofficial** and not affiliated with **WUHAN JIYI NETWORK TECHNOLOGY CO., LTD**. Use it responsibly
+and in accordance with their terms of service.
