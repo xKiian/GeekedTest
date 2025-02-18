@@ -11,11 +11,10 @@ class GobangSolver:
             elements = [self.board[r][c] for r, c in line]
             freq = self._count_freq(elements)
 
-            if 4 not in freq.values() or freq.get(0) == 4:
+            if self.n - 1 not in freq.values() or freq.get(0) == self.n - 1:
                 continue
 
-            correct_num = next(num for num, cnt in freq.items() if cnt == 4)
-
+            correct_num = next(num for num, cnt in freq.items() if cnt == self.n - 1)
             try:
                 zero_idx = elements.index(0)
             except ValueError:

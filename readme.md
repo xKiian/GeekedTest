@@ -7,7 +7,7 @@
     <img src="assets/gobang.png">
 </div>
 
-Version: v1.8.7-a86f4a
+Version: v1.8.7-67cc7f
 
 ---
 
@@ -74,6 +74,7 @@ There are 2 constants in `sign.py`
 
 - self.mapping
 - abo
+- device_id (probably empty)
 
 If the solver doesn't work, run `deobfuscate.py` to get the updated constants.
 
