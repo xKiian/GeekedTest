@@ -1,4 +1,4 @@
-name: Update Geetest Version
+name: Check and Update Geetest Version
 on:
   schedule:
     - cron: '0 * * * *'  # Runs every hour
