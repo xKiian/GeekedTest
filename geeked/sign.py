@@ -190,7 +190,7 @@ function encrypt_asymmetric_2(input, key) {
             "device_id": "",  # why is this empty!!
             "em": {  # save to have this static (see em.js)
                 "cp": 0,  # checkCallPhantom
-                "ek": "f1",  # checkErrorKeys "11" as value is also fine
+                "ek": "11",  # checkErrorKeys "11" as value is also fine
                 "nt": 0,  # checkNightmare
                 "ph": 0,  # checkPhantom
                 "sc": 0,  # checkSeleniumMarker

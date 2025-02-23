@@ -5,13 +5,13 @@ import urllib.parse
 def getPath() -> str:
     params = {
         "callback": "geetest_1738850809870",
-        "captcha_id": "71c51bcde3aa2495692dcef823495235",
+        "captcha_id": "588a5218557e1eadf33d682a6958c31b",
         "challenge": str(uuid.uuid4()),
         "client_type": "web",
         "lang": "en"
     }
 
-    res = requests.get("https://gcaptcha4.geetest.com/load", params=params).text
+    res = requests.get("https://gcaptcha4.geevisit.com/load", params=params).text
     formatted = json.loads(res.split(f"{params['callback']}(")[1][:-1])
 
     return formatted["data"]["static_path"]
@@ -20,7 +20,7 @@ def getPath() -> str:
 path = getPath()
 print("[~] Path/Version:", path)
 
-script = requests.get(f"https://static.geetest.com{path}/js/gcaptcha4.js").text
+script = requests.get(f"https://static.geevisit.com{path}/js/gcaptcha4.js").text
 
 # open("raw.js", "w", encoding="utf8").write(script)
 

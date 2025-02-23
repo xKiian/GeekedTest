@@ -11,7 +11,7 @@ import requests, cv2
 
 
 class SlideSolver:
-    def __init__(self, background, puzzle_piece):
+    def __init__(self, puzzle_piece, background):
         self.background = self._read_image(background)
         self.puzzle_piece = self._read_image(puzzle_piece)
 
@@ -58,6 +58,14 @@ class SlideSolver:
         h, w = edge_puzzle_piece.shape[:2]
 
         center_x = top_left[0] + w // 2
+        center_y = top_left[1] + h // 2
+        bottom_right = (top_left[0] + w, top_left[1] + h)
+
+        cv2.rectangle(self.background, top_left, bottom_right, (0, 0, 255), 2)
+        cv2.line(self.background, (center_x, 0), (center_x, edge_background_rgb.shape[0]), (0, 255, 0), 2)
+        cv2.line(self.background, (0, center_y), (edge_background_rgb.shape[1], center_y), (0, 255, 0), 2)
+        # cv2.imwrite('output.png', self.background)
+
         return center_x  - 41 # -41 because we need the start of the piece, not the center
 
 
