@@ -63,13 +63,10 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b update-version-${VERSION}
 
-          git pull --rebase origin update-version-${VERSION} || true
-
           git add readme.md ./geeked/sign.py
           git commit -m "Update version to ${VERSION}"
 
-          # Force push only if necessary (avoids errors)
-          git push origin update-version-${VERSION} --force
+          git push origin update-version-${VERSION}
       - name: Create Pull Request
         if: env.changed == 'true'
         uses: peter-evans/create-pull-request@v5
