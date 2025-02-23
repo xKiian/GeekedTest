@@ -18,7 +18,7 @@ def getPath() -> str:
 
 
 path = getPath()
-print("[~] Path/Version:", path)
+print("[~] Version:", path.split("/")[3])
 
 script = requests.get(f"https://static.geevisit.com{path}/js/gcaptcha4.js").text
 
