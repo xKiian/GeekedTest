@@ -37,13 +37,13 @@ def decrypt_table(table_encrypted, _key):
 table_enc = urllib.parse.unquote(script.split("decodeURI(\"")[1].split("\"")[0])
 key = re.findall(r"}}}\(\"(.+?)\"\)}", script)[0]
 
-print("[~] Key:", key)
+#print("[~] Key:", key)
 
 table = decrypt_table(table_enc, key)
 
 obfuscated_names = re.findall(r"(_.{4})\((\d+?)\)", script)
 
-print(f"[#] Replacing {len(obfuscated_names)} obfuscated names...\n")
+#print(f"[#] Replacing {len(obfuscated_names)} obfuscated names...\n")
 
 for (name, index) in obfuscated_names:
     script = script.replace(f"{name}({index})", repr(table[int(index)]))
