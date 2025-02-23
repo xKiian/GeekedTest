@@ -47,7 +47,8 @@ jobs:
       - name: Check for changes
         id: check_changes
         run: |
-          if git diff --quiet; then
+          git status
+          if git diff --quiet && git diff --staged --quiet; then
             echo "No changes detected."
             echo "changed=false" >> $GITHUB_ENV
           else
