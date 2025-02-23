@@ -61,7 +61,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b update-version-${VERSION}
-          git add README.md ./geeked/sign.py
+          git add readme.md ./geeked/sign.py
           git commit -m "Update version to ${VERSION}"
           git push https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }}.git update-version-${VERSION}
 
@@ -72,5 +72,5 @@ jobs:
           token: ${{ secrets.PAT }}
           branch: update-version-${{ env.VERSION }}
           title: "Update version to ${{ env.VERSION }}"
-          body: "Automated update of README.md and geeked/sign.py."
+          body: "Geetest Updated! Automated update of readme.md and geeked/sign.py."
           base: main
