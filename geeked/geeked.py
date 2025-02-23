@@ -12,7 +12,7 @@ class Geeked:
         self.captcha_id = captcha_id
         self.challenge = str(uuid4())
         self.risk_type = risk_type
-        self.base_url = "https://gcaptcha4.geetest.com"
+        self.base_url = "https://gcaptcha4.geevisit.com"
         self.callback = Geeked.random()
         self.session = Session()  # Session(client_identifier="chrome_120")
         self.session.headers = {

@@ -54,6 +54,7 @@ for (name, index) in obfuscated_names:
 # constants that might change on a version update
 
 abo = re.findall(r"\['_lib']=(.+?),", script)[0].replace("'", '"')
+abo = re.sub(r'([{,])\s*([A-Za-z0-9_]+)\s*:', r'\1"\2":', abo)
 print("[+] abo:", abo)
 
 mappings = re.findall(r"\['_abo']=(.+?)}\(\)", script)[0]
