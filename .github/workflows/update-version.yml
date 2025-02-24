@@ -1,7 +1,7 @@
 name: Check and Update Geetest Version
 on:
   schedule:
-    - cron: '0 */12 * * *'  # Runs every hour
+    - cron: '0 */12 * * *'
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
