@@ -1,12 +1,11 @@
 from uuid import uuid4
-# from tls_client import Session
+from curl_cffi import requests
 import random, time, json
 from geeked.sign import Signer
-from requests import Session
 
 
 class Geeked:
-    def __init__(self, captcha_id: str, risk_type: str):
+    def __init__(self, captcha_id: str, risk_type: str, **kwargs):
         self.pass_token = None
         self.lot_number = None
         self.captcha_id = captcha_id
@@ -14,11 +13,11 @@ class Geeked:
         self.risk_type = risk_type
         self.base_url = "https://gcaptcha4.geevisit.com"
         self.callback = Geeked.random()
-        self.session = Session()  # Session(client_identifier="chrome_120")
+        self.session = requests.Session(impersonate="chrome124", **kwargs)
         self.session.headers = {
             "connection": "keep-alive",
             "sec-ch-ua-platform": "\"Windows\"",
-            "user-agent": "MMozilla/5.0 (Windows NT 10.0; Win64; x64; rv:134.0) Gecko/20100101 Firefox/134.0",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
             "sec-ch-ua-mobile": "?0",
             "accept": "*/*",
             "sec-fetch-site": "same-origin",
