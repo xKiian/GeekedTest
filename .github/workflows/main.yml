@@ -30,9 +30,9 @@ jobs:
           output=$(python deobfuscate.py)
           echo "$output"
           echo "VERSION=$(echo "$output" | grep '\[~\] Version:' | awk '{print $3}')" >> $GITHUB_ENV
-          echo "ABO=$(echo "$output" | grep '\[+\] abo:' | cut -d':' -f2- | xargs)" >> $GITHUB_ENV
-          echo "MAPPINGS=$(echo "$output" | grep '\[+\] mappings' | cut -d':' -f2- | xargs)" >> $GITHUB_ENV
-          echo "DEVICE_ID=$(echo "$output" | grep '\[+\] device_id:' | cut -d':' -f2- | xargs)" >> $GITHUB_ENV
+          echo "ABO=$(echo "$output" | grep '\[+\] abo:' | sed 's/.*: //')" >> $GITHUB_ENV
+          echo "MAPPINGS=$(echo "$output" | grep '\[+\] mappings' | sed 's/.*: //')" >> $GITHUB_ENV
+          echo "DEVICE_ID=$(echo "$output" | grep '\[+\] device_id:' | sed -n 's/.*: \(\"[^\"]*\"\).*/\1/p')" >> $GITHUB_ENV
 
       - name: Update README.md
         run: |
@@ -40,9 +40,9 @@ jobs:
 
       - name: Update geeked/sign.py
         run: |
-          sed -i 's/self\.mapping = {.*}/self.mapping = {'"$MAPPINGS"'}/' ./geeked/sign.py
-          sed -i 's/abo = {.*}/abo = '"$ABO"'/' ./geeked/sign.py
-          sed -i 's/"device_id": ".*"/"device_id": "'"$DEVICE_ID"'"/' ./geeked/sign.py
+          sed -i "s|self.mapping = {.*}|self.mapping = $MAPPINGS|" ./geeked/sign.py
+          sed -i "s|abo = {.*}|abo = $ABO|" ./geeked/sign.py
+          sed -i "s|\"device_id\": \".*\"|\"device_id\": $DEVICE_ID|" ./geeked/sign.py
 
       - name: Check for changes
         id: check_changes
