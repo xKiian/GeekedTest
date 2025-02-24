@@ -11,7 +11,6 @@ class Geeked:
         self.captcha_id = captcha_id
         self.challenge = str(uuid4())
         self.risk_type = risk_type
-        self.base_url = "https://gcaptcha4.geevisit.com"
         self.callback = Geeked.random()
         self.session = requests.Session(impersonate="chrome124", **kwargs)
         self.session.headers = {
@@ -26,6 +25,7 @@ class Geeked:
             "accept-encoding": "gzip, deflate, br, zstd",
             "accept-language": "en-US,en;q=0.9"
         }
+        self.session.base_url = "https://gcaptcha4.geevisit.com"
 
     @staticmethod
     def random() -> str:
@@ -44,7 +44,7 @@ class Geeked:
             "lang": "eng",
             "callback": self.callback,
         }
-        res = self.session.get(f"{self.base_url}/load", params=params)
+        res = self.session.get("/load", params=params)
         return self.format_response(res.text)
 
     def submit_captcha(self, data: dict) -> dict:
@@ -62,7 +62,7 @@ class Geeked:
             "pt": "1",
             "w": Signer.generate_w(data, self.captcha_id, self.risk_type),
         }
-        res = self.session.get(f"{self.base_url}/verify", params=params).text
+        res = self.session.get("/verify", params=params).text
         res = self.format_response(res)
 
         if res.get("seccode") is None:
