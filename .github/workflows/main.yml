@@ -31,7 +31,7 @@ jobs:
           echo "$output"
           echo "VERSION=$(echo "$output" | grep '\[~\] Version:' | awk '{print $3}')" >> $GITHUB_ENV
           echo "ABO=$(echo "$output" | grep '\[+\] abo:' | sed 's/.*: //')" >> $GITHUB_ENV
-          echo "MAPPINGS=$(echo "$output" | grep '\[+\] mappings' | sed 's/.*: //')" >> $GITHUB_ENV
+          echo "MAPPINGS=$(echo "$output" | grep '\[+\] mappings' | sed 's/\[+\] mappings //')" >> $GITHUB_ENV
           echo "DEVICE_ID=$(echo "$output" | grep '\[+\] device_id:' | sed -n 's/.*: \(\"[^\"]*\"\).*/\1/p')" >> $GITHUB_ENV
 
       - name: Update README.md
