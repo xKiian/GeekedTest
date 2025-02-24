@@ -60,9 +60,8 @@ jobs:
         if: env.changed == 'true'
         uses: peter-evans/create-pull-request@v5
         with:
-          token: ${{ secrets.PAT }}
-          commit-message: "Update version to ${{ env.VERSION }}"
+          commit-message: "Update Geetest version to ${{ env.VERSION }}"
           branch: update-version-${{ env.VERSION }}
-          title: "Update version to ${{ env.VERSION }}"
+          title: "Update Geetest version to ${{ env.VERSION }}"
           body: "Geetest Updated! Automated update of readme.md and geeked/sign.py."
           base: main
