@@ -56,22 +56,12 @@ jobs:
             echo "changed=true" >> $GITHUB_ENV
           fi
 
-      - name: Commit and push changes
-        if: env.changed == 'true'
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -b update-version-${VERSION}
-
-          git add readme.md ./geeked/sign.py
-          git commit -m "Update version to ${VERSION}"
-
-          git push origin update-version-${VERSION}
       - name: Create Pull Request
         if: env.changed == 'true'
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.PAT }}
+          commit-message: "Update version to ${{ env.VERSION }}"
           branch: update-version-${{ env.VERSION }}
           title: "Update version to ${{ env.VERSION }}"
           body: "Geetest Updated! Automated update of readme.md and geeked/sign.py."
