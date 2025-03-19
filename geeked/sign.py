@@ -16,7 +16,7 @@ from geeked.gobang import GobangSolver
 
 class LotParser:
     def __init__(self):
-        self.mapping = {"(n[5:7]+n[26:28])+.+(n[6:13])+.+(n[27:30])":'n[6:13]'}
+        self.mapping = {"(n[23:25]+n[6:8])+.+(n[1:3]+n[25:27])+.+(n[27:29]+n[9:11])":'n[19:24]'}
         self.lot = []
         self.lot_res = []
         for k, v in self.mapping.items():
@@ -181,7 +181,7 @@ function encrypt_asymmetric_2(input, key) {
     def generate_w(data: dict, captcha_id: str, risk_type: str):
         lot_number = data['lot_number']
         pow_detail = data['pow_detail']
-        abo = {"G9l5":"Bm9w"}
+        abo = {"G9M2":"1RZL"}
         base = abo | {
             **Signer.generate_pow(lot_number, captcha_id, pow_detail['hashfunc'], pow_detail['version'],
                                   pow_detail['bits'], pow_detail['datetime'], ""),
