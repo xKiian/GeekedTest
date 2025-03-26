@@ -7,7 +7,7 @@
     <img src="assets/gobang.png">
 </div>
 
-Version: v1.8.8-0a0a52
+Version: v1.8.8-0ee054
 
 ---
 
