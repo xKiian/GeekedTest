@@ -1,9 +1,8 @@
-import re
 import cv2
 import numpy as np
 import requests
 import random
-from typing import List, Dict, Union, Optional
+from typing import List, Dict, Union, Optional, Any
 from .dddd_server import dddd_service
 
 
@@ -45,7 +44,7 @@ class IconSolver:
         response.raise_for_status()  # Raise exception for bad status codes
         return response.content
 
-    def _get_directions(self) -> List[Dict[str, str]]:
+    def _get_directions(self) -> List[Dict[str, Any]]:
         """Extract directions from question icons using the predefined mapping."""
         return [{'direction': self.ICON_MAPPING.get(q.split('/')[-1], '')} for q in self.ques]
 

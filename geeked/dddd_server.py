@@ -10,8 +10,9 @@ charsets_path = os.path.join(root_dir, 'geeked', 'models', 'charsets.json')
 
 class DdddService:
     def __init__(self):
-        self.det = ddddocr.DdddOcr(det=True)
+        self.det = ddddocr.DdddOcr(det=True, show_ad=False)
         self.cnn = ddddocr.DdddOcr(det=False, ocr=False,
+                                   show_ad=False,
                                    import_onnx_path=onnx_path,
                                    charsets_path=charsets_path)
 
