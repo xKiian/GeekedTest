@@ -5,6 +5,7 @@
     <br>
     <img src="assets/slide.png">
     <img src="assets/gobang.png">
+    <img src="assets/icon.png">
 </div>
 
 Version: v1.8.8-7aa407
@@ -19,7 +20,8 @@ Please star the repository if you find it useful! Your support helps improve the
 
 ## Disclaimer
 
-This repository currently supports only **risk_type** `slide`, `gobang` and `ai`. If the project gains enough attention, I will
+This repository currently supports only **risk_type** `slide`, `gobang`, `icon` and `ai`. If the project gains enough attention,
+I will
 consider adding more risk types.
 
 ---
@@ -95,7 +97,6 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
  </picture>
 
 ---
-
 
 ## Disclaimer #2
 
