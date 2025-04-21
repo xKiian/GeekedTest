@@ -82,6 +82,10 @@ If the solver doesn't work, run `deobfuscate.py` to get the updated constants.
 
 ---
 
+[Here](https://gt4.geetest.com/demov4/index-en.html) is a demo site from Geetest, where you can test each captcha type
+
+---
+
 ## License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
