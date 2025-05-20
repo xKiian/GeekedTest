@@ -231,7 +231,7 @@ function encrypt_asymmetric_2(input, key) {
             base |= {
                 "userresponse": GobangSolver(data["ques"]).find_four_in_line()
             }
-        elif risk_type in ('icon'):
+        elif risk_type in 'icon':
             base |= {
                 "passtime": random.randint(600, 1200),  # time in ms it took to solve
                 "userresponse": IconSolver(data["imgs"], data["ques"]).find_icon_position()
