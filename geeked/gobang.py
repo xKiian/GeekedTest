@@ -27,26 +27,20 @@ class GobangSolver:
                 return [[remove_pos[0], remove_pos[1]], [fill_pos[0], fill_pos[1]]]
 
     def _iterate_lines(self):
-        # Rows and columns
         for row in range(self.n):
             yield [(row, c) for c in range(self.n)]
         for col in range(self.n):
             yield [(r, col) for r in range(self.n)]
 
-        # Diagonals (both directions)
-        diag_groups = defaultdict(list)
-        for r in range(self.n):
-            for c in range(self.n):
-                diag_groups[r - c].append((r, c))
-        for group in diag_groups.values():
-            yield sorted(group, key=lambda x: x[0])
-
-        diag_groups = defaultdict(list)
-        for r in range(self.n):
-            for c in range(self.n):
-                diag_groups[r + c].append((r, c))
-        for group in diag_groups.values():
-            yield sorted(group, key=lambda x: x[0])
+        for start_row in range(self.n):
+            yield [(start_row + i, i) for i in range(self.n - start_row)]
+        for start_col in range(1, self.n):
+            yield [(i, start_col + i) for i in range(self.n - start_col)]
+            
+        for start_row in range(self.n):
+            yield [(start_row - i, i) for i in range(start_row + 1)]
+        for start_col in range(1, self.n):
+            yield [(self.n - 1 - i, start_col + i) for i in range(self.n - start_col)]
 
     @staticmethod
     def _count_freq(elements):
