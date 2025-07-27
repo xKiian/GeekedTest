@@ -3,7 +3,7 @@ import numpy as np
 import requests
 import random
 from typing import List, Dict, Union, Optional, Any
-from .dddd_server import dddd_service
+
 
 
 class IconSolver:
@@ -50,6 +50,7 @@ class IconSolver:
 
     def _process_bbox(self, bbox: List[int], im: np.ndarray) -> Optional[Dict[str, Union[str, List[float]]]]:
         """Process a single bounding box and return direction and coordinates if matched."""
+        from .dddd_server import dddd_service
         x1, y1, x2, y2 = bbox
         img = im[y1:y2, x1:x2]
         _, img_bytes = cv2.imencode(".png", img)
@@ -62,6 +63,7 @@ class IconSolver:
         Find icon positions based on the question directions.
         Returns a list of coordinates for each required direction.
         """
+        from .dddd_server import dddd_service
         bboxes = dddd_service.detection(self.imgs)
         im = cv2.imdecode(np.frombuffer(self.imgs, dtype=np.uint8), cv2.IMREAD_COLOR)
 
