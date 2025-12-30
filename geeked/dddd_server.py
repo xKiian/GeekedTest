@@ -1,8 +1,6 @@
 import os
 import pathlib
 
-
-
 root_dir = pathlib.Path(__file__).resolve().parent.parent
 onnx_path = os.path.join(root_dir, 'geeked', 'models', 'geetest_v4_icon.onnx')
 charsets_path = os.path.join(root_dir, 'geeked', 'models', 'charsets.json')

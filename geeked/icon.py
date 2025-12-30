@@ -1,9 +1,9 @@
+import random
+from typing import Any, Dict, List, Optional, Union
+
 import cv2
 import numpy as np
 import requests
-import random
-from typing import List, Dict, Union, Optional, Any
-
 
 
 class IconSolver:

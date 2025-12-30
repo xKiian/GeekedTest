@@ -1,1 +1,1 @@
-from geeked.geeked import *
+from .geeked import *

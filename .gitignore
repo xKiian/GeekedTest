@@ -9,3 +9,6 @@ rev2.js
 deobfuscated.js
 /reverse/gcaptcha4.js
 raw.js
+/.vscode
+/geekedtest.egg-info
+/geeked.egg-info

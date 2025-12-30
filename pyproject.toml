@@ -1,0 +1,98 @@
+[project]
+name = "geeked"
+version = "0.1.2"
+requires-python = ">=3.12"
+dependencies = [
+    "curl-cffi>=0.10.0",
+    "fastapi>=0.115.6",
+    "numpy>=2.2.0",
+    "opencv-python>=4.10.0.84",
+    "pycryptodome>=3.21.0",
+    "requests>=2.32.0",
+    "uvicorn>=0.34.0",
+]
+
+[project.optional-dependencies]
+ocr = ["ddddocr"]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["geeked"]
+
+[tool.uv.sources]
+ddddocr = { git = "https://github.com/sml2h3/ddddocr.git", rev = "main" }
+
+
+[tool.ruff]
+exclude = [
+    ".venv",
+    "venv",
+    ".git",
+    "__pycache__",
+    "*.egg-info",
+    "dist",
+    "build",
+    ".pytest_cache",
+    ".mypy_cache",
+    ".ruff_cache",
+    "shared/parsefi_core/generated",  # Your generated gRPC code
+]
+
+# Python version
+target-version = "py313"
+
+# Line length (default is 88, matching Black)
+line-length = 120
+
+# Linting configuration
+[tool.ruff.lint]
+# Enable specific rule sets
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort (import sorting)
+    "N",   # pep8-naming
+    "UP",  # pyupgrade (modern Python syntax)
+    "B",   # flake8-bugbear (likely bugs)
+    "C4",  # flake8-comprehensions
+    "SIM", # flake8-simplify
+    "RUF", # Ruff-specific rules
+]
+
+ignore = [
+    "E501",   # Line too long (formatter handles this)
+    "UP045",  # Keep Optional[X] style instead of X | None
+    "UP006",  # Keep typing.List instead of list
+    "UP007",  # Keep typing.Dict instead of dict
+    "UP035",  # Keep typing.Callable instead of collections.abc.Callable
+    "RUF001", # Ambiguous unicode character in string
+    "RUF002", # Ambiguous unicode character in docstring
+    "RUF003", # Ambiguous unicode comment character
+    "RUF005", # Consider iterable unpacking instead of concatenation
+    "RUF010", # Use explicit conversion flag in f-string (allow explicit str())
+    "SIM105", # Use contextlib.suppress() instead of try-except-pass
+    "SIM108", # Use ternary operator instead of if-else-block
+    "B904",   # Use raise from to specify exception cause,
+    "W293"
+]
+
+# Import sorting configuration
+[tool.ruff.lint.isort]
+combine-as-imports = true
+force-wrap-aliases = true
+
+# Format settings
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.10",
+]

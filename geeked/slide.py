@@ -6,8 +6,9 @@ Big thanks to glizzykingdreko for making amazing solver
 
 i modified it a bit
 """
+import cv2
 import numpy as np
-import requests, cv2
+import requests
 
 
 class SlideSolver:

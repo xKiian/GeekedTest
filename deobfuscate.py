@@ -1,5 +1,9 @@
-import requests, json, uuid, re
+import json
+import re
 import urllib.parse
+import uuid
+
+import requests
 
 
 def getPath() -> str:
