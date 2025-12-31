@@ -3,7 +3,7 @@ import random
 import time
 from uuid import uuid4
 
-from curl_cffi import requests
+from curl_cffi import AsyncSession
 
 from .sign import Signer
 
@@ -16,7 +16,7 @@ class Geeked:
         self.challenge = str(uuid4())
         self.risk_type = risk_type
         self.callback = Geeked.random()
-        self.session = requests.Session(impersonate="chrome124", **kwargs)
+        self.session = AsyncSession(impersonate="chrome124", **kwargs)
         self.session.headers = {
             "connection": "keep-alive",
             "sec-ch-ua-platform": '"Windows"',
@@ -39,7 +39,7 @@ class Geeked:
         parsed = json.loads(response.split(f"{self.callback}(")[1][:-1])
         return parsed.get("data", parsed)
 
-    def load_captcha(self, payload=None, process_token=None):
+    async def load_captcha(self, payload=None, process_token=None):
         params = {
             "captcha_id": self.captcha_id,
             "challenge": self.challenge,
@@ -56,10 +56,10 @@ class Geeked:
             params["pt"] = "1"
             params["payload_protocol"] = "1"
 
-        res = self.session.get("/load", params=params)
+        res = await self.session.get("/load", params=params)
         return self.format_response(res.text)
 
-    def submit_captcha(self, data: dict) -> str:
+    async def submit_captcha(self, data: dict) -> str:
         self.callback = Geeked.random()
 
         params = {
@@ -74,11 +74,11 @@ class Geeked:
             "pt": "1",
             "w": Signer.generate_w(data, self.captcha_id, data["captcha_type"]),
         }
-        res = self.session.get("/verify", params=params).text
+        resp = await self.session.get("/verify", params=params)
 
-        return res
+        return resp.text
 
-    def initial_verify(self, data: dict, dummy_w: str) -> dict:
+    async def initial_verify(self, data: dict, dummy_w: str) -> dict:
         self.callback = Geeked.random()
 
         params = {
@@ -94,27 +94,29 @@ class Geeked:
             "w": dummy_w,
         }
 
-        res = self.session.get("/verify", params=params).text
-        res = self.format_response(res)
+        resp = await self.session.get("/verify", params=params)
+        res = self.format_response(resp.text)
 
         if res.get("result") != "fail":
             raise Exception(f"Expected initial verify to fail, got: {res}")
 
         return res
 
-    def solve(self) -> str:
-        initial_data = self.load_captcha()
+    async def solve(self) -> str:
+        initial_data = await self.load_captcha()
         self.lot_number = initial_data["lot_number"]
 
         dummy_w = Signer.generate_dummy_w(initial_data, self.captcha_id)
-        failed_data = self.initial_verify(initial_data, dummy_w)
+        failed_data = await self.initial_verify(initial_data, dummy_w)
 
-        reload_data = self.load_captcha(payload=failed_data["payload"], process_token=failed_data["process_token"])
+        reload_data = await self.load_captcha(
+            payload=failed_data["payload"], process_token=failed_data["process_token"]
+        )
 
-        seccode = self.submit_captcha(reload_data)
+        seccode = await self.submit_captcha(reload_data)
         return seccode
 
-    def solve_from_load_data(self, load_data: str) -> str:
+    async def solve_from_load_data(self, load_data: str) -> str:
         # Parse JSONP with any callback name (browser may use different callback)
         match = json.loads(load_data.split("(", 1)[1].rsplit(")", 1)[0])
         parsed_load_data = match["data"]
@@ -138,7 +140,9 @@ class Geeked:
             "w": dummy_w,
         }
 
-        res = self.session.get("/verify", params=params).text
+        resp = await self.session.get("/verify", params=params)
+
+        res = resp.text
         verify_response = self.format_response(res)
 
         # If succeeded on first try, return immediately
@@ -146,9 +150,9 @@ class Geeked:
             return res
 
         # If failed, continue with reload
-        reload_data = self.load_captcha(
+        reload_data = await self.load_captcha(
             payload=verify_response["payload"], process_token=verify_response["process_token"]
         )
 
-        seccode = self.submit_captcha(reload_data)
+        seccode = await self.submit_captcha(reload_data)
         return seccode
