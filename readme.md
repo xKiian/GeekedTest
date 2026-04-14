@@ -8,7 +8,7 @@
     <img src="assets/icon.png">
 </div>
 
-Version: v1.9.5-3cbe98
+Version: v1.9.5-2bdc17
 
 ---
 
