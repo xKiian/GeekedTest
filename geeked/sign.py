@@ -142,40 +142,40 @@ function encrypt_asymmetric_2(input, key) {
     @staticmethod
     def generate_pow(lot_number_pow, captcha_id_pow, hash_func, hash_version, bits, date, empty) -> dict:
         """Generate the pow_msg & pow_sign | translated directly from the .js"""
-        bit_remainder = bits % 4
-        bit_division = bits // 4
-
-        prefix = '0' * bit_division
         pow_string = f"{hash_version}|{bits}|{hash_func}|{date}|{captcha_id_pow}|{lot_number_pow}|{empty}|"
+
+        if hash_func == 'md5':
+            hash_algo = hashlib.md5
+        elif hash_func == 'sha1':
+            hash_algo = hashlib.sha1
+        elif hash_func == 'sha256':
+            hash_algo = hashlib.sha256
+        else:
+            raise ValueError(f"Unsupported hash function: {hash_func}. Create an issue")
+
+        hex_zeros = bits // 4
+        extra_zero_bits = bits % 4
+        prefix = '0' * hex_zeros
+        max_hex_char = ''
+        if extra_zero_bits == 1:
+            max_hex_char = '7'
+        elif extra_zero_bits == 2:
+            max_hex_char = '3'
+        elif extra_zero_bits == 3:
+            max_hex_char = '1'
 
         while True:
             h = Signer.rand_uid()
             combined = pow_string + h
-            hashed_value = None
 
-            if hash_func == 'md5':
-                hashed_value = hashlib.md5(combined.encode('utf-8')).hexdigest()
-            elif hash_func == 'sha1':
-                hashed_value = hashlib.sha1(combined.encode('utf-8')).hexdigest()
-            elif hash_func == 'sha256':
-                hashed_value = hashlib.sha256(combined.encode('utf-8')).hexdigest()
+            hashed_value = hash_algo(combined.encode('utf-8')).hexdigest()
 
-            if bit_remainder == 0:
-                if hashed_value.startswith(prefix):
-                    return {'pow_msg': pow_string + h, 'pow_sign': hashed_value}
-            else:
-                if hashed_value.startswith(prefix):
-                    length = len(prefix)
-                    threshold = None
-                    if bit_remainder == 1:
-                        threshold = 7
-                    elif bit_remainder == 2:
-                        threshold = 3
-                    elif bit_remainder == 3:
-                        threshold = 1
-
-                    if length <= threshold:
-                        return {'pow_msg': pow_string + h, 'pow_sign': hashed_value}
+            if hashed_value.startswith(prefix):
+                if extra_zero_bits == 0 or hashed_value[hex_zeros] <= max_hex_char:
+                    return {
+                        'pow_msg': combined, 
+                        'pow_sign': hashed_value
+                    }
 
     @staticmethod
     def generate_w(data: dict, captcha_id: str, risk_type: str):
